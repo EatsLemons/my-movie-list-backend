@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"my-movie-list/app/tmdb"
+	"my-movie-list/tmdb"
 	"net/http"
 	"strconv"
 	"strings"
