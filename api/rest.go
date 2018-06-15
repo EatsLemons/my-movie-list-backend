@@ -93,16 +93,13 @@ func (rs *Rest) autocompleteHndlr(w http.ResponseWriter, r *http.Request) {
 
 		response.AutocompleteMovie = append(response.AutocompleteMovie, autocompleteItem)
 
-		actors := make([]string, 0)
 		credits, _ := rs.TmbdClient.GetMovieCredits(strconv.Itoa(searchMovieRS.Results[i].ID))
 		castCount := len(credits.Cast)
 		if credits != nil {
 			for j := 0; (castCount >= 3 && j < 3) || (castCount < 3 && castCount > j); j++ {
-				actors = append(actors, credits.Cast[j].Name)
+				autocompleteItem.Actors = append(autocompleteItem.Actors, credits.Cast[j].Name)
 			}
 		}
-
-		autocompleteItem.Actors = strings.Join(actors, ", ")
 	}
 
 	rs.makeJSONResponse(w, response)
@@ -130,23 +127,23 @@ func (rs *Rest) makeResponseItem() *Response {
 
 // AutocompleteMovie is a response DTO of autocomplete movie request
 type AutocompleteMovie struct {
-	Name   string `json:"name"`
-	Actors string `json:"actors"`
-	Year   string `json:"release_year"`
-	Image  string `json:"image_url"`
+	Name   string   `json:"name,omitempty"`
+	Actors []string `json:"actors,omitempty"`
+	Year   string   `json:"release_year,omitempty"`
+	Image  string   `json:"image_url,omitempty"`
 }
 
 type Response struct {
 	AutocompleteMovie []*AutocompleteMovie `json:"autocomplete_movie"`
 
-	Errors     []Error     `json:"errors"`
+	Errors     []Error     `json:"errors,omitempty"`
 	SystemInfo *SystemInfo `json:"system_info"`
 }
 
 type Error struct {
-	Message string `json:"message"`
+	Message string `json:"message,omitempty"`
 }
 
 type SystemInfo struct {
-	Version string `json:"version"`
+	Version string `json:"version,omitempty"`
 }
