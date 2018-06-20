@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -29,6 +30,7 @@ func MakeTmdbAPIClient(apiKey string) *TmdbAPI {
 
 // SearchMovie request movies list from TMDB by query string
 func (c *TmdbAPI) SearchMovie(query string) (*SearchMovieResponse, error) {
+	query = strings.Replace(query, " ", "%20", -1)
 	requestURI := "/search/movie?language=ru-RU&page=1&include_adult=true&query=" + query
 
 	response := &SearchMovieResponse{}
