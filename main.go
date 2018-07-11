@@ -2,7 +2,7 @@ package main
 
 import (
 	"my-movie-list/api"
-	"my-movie-list/tmdb"
+	"my-movie-list/service/tmdb"
 	"os"
 
 	flags "github.com/jessevdk/go-flags"
