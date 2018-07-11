@@ -83,7 +83,8 @@ func (rs *Rest) autocompleteHndlr(w http.ResponseWriter, r *http.Request) {
 
 	resultCounts := len(searchMovieRS.Results)
 
-	for i := 0; (i < 4 && resultCounts > 4) || (i < resultCounts && resultCounts < 4); i++ {
+	autocompleteCount := 4
+	for i := 0; (i < autocompleteCount && resultCounts > autocompleteCount) || (i < resultCounts && resultCounts < autocompleteCount); i++ {
 		dateSlice := strings.Split(searchMovieRS.Results[i].ReleaseDate, "-")
 		autocompleteItem := &AutocompleteMovie{
 			Name:  searchMovieRS.Results[i].Title,

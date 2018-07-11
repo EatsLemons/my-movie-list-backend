@@ -1,7 +1,7 @@
 package main
 
 import (
-	"my-movie-list/api"
+	"my-movie-list/rest/api"
 	"my-movie-list/service/tmdb"
 	"os"
 
