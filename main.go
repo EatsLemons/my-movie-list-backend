@@ -2,6 +2,7 @@ package main
 
 import (
 	"my-movie-list/rest/api"
+	"my-movie-list/rest/auth"
 	"my-movie-list/service/tmdb"
 	"os"
 
@@ -21,9 +22,11 @@ func main() {
 	}
 
 	tmbdClient := tmdb.MakeTmdbAPIClient(opts.TmdbAPIKey)
+	authenticator := auth.NewAuthenticator()
 
 	server := &api.Rest{
-		TmbdClient: tmbdClient,
+		TmbdClient:    tmbdClient,
+		Authenticator: authenticator,
 	}
 
 	server.Run(opts.Port)

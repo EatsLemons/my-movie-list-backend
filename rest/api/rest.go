@@ -6,6 +6,7 @@ import (
 	"log"
 	"my-movie-list/service/tmdb"
 	"net/http"
+	"remark/backend/app/rest/auth"
 	"strconv"
 	"strings"
 	"time"
@@ -18,7 +19,8 @@ import (
 type Rest struct {
 	Version string
 
-	TmbdClient *tmdb.TmdbAPI
+	TmbdClient    *tmdb.TmdbAPI
+	Authenticator *auth.Authenticator
 
 	httpServer *http.Server
 }
