@@ -32,12 +32,13 @@ func (rs *Rest) Run(port int) {
 	r := mux.NewRouter()
 
 	v1 := r.PathPrefix("/api/v1/").Subrouter()
-
-	// Check alive
 	v1.HandleFunc("/ping", rs.pingHndlr).Methods("GET")
-
-	// Movie autocomplete
 	v1.HandleFunc("/autocomplete/{query}", rs.autocompleteHndlr).Methods("GET")
+
+	auth := r.PathPrefix("/auth/").Subrouter()
+	auth.HandleFunc("/login", rs.Authenticator.LoginHndlr)
+	auth.HandleFunc("/logout", rs.Authenticator.LogoutHndlr)
+	auth.HandleFunc("/callback", rs.Authenticator.CallBackHndlr)
 
 	rs.httpServer = &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
