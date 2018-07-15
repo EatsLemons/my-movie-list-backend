@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"my-movie-list/rest/auth"
 	"my-movie-list/service/tmdb"
 	"net/http"
-	"remark/backend/app/rest/auth"
 	"strconv"
 	"strings"
 	"time"
@@ -36,9 +36,11 @@ func (rs *Rest) Run(port int) {
 	v1.HandleFunc("/autocomplete/{query}", rs.autocompleteHndlr).Methods("GET")
 
 	auth := r.PathPrefix("/auth/").Subrouter()
-	auth.HandleFunc("/login", rs.Authenticator.LoginHndlr)
-	auth.HandleFunc("/logout", rs.Authenticator.LogoutHndlr)
-	auth.HandleFunc("/callback", rs.Authenticator.CallBackHndlr)
+	auth.HandleFunc("/google/login", rs.Authenticator.LoginHndlr)
+	auth.HandleFunc("/google/logout", rs.Authenticator.LogoutHndlr)
+	auth.HandleFunc("/google/callback", rs.Authenticator.CallBackHndlr)
+
+	r.Use(rs.responseMiddleware)
 
 	rs.httpServer = &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
@@ -49,6 +51,15 @@ func (rs *Rest) Run(port int) {
 	}
 	err := rs.httpServer.ListenAndServe()
 	log.Printf("[WARN] http server terminated, %s", err)
+}
+
+func (rs *Rest) responseMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (rs *Rest) autocompleteHndlr(w http.ResponseWriter, r *http.Request) {
